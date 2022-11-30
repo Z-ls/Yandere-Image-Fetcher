@@ -1,10 +1,8 @@
 /*global chrome*/
-import "./App.css";
 import { useState, useEffect } from "react";
-import { Router, Routes, Route } from "react-router";
 import { Container, Row, Col, Button } from "react-bootstrap";
 
-function App() {
+export function MainPage() {
 	const [showUrl, setShowUrl] = useState(false);
 	const [url, setUrl] = useState("");
 	useEffect(() => {
@@ -37,5 +35,3 @@ function App() {
 		</Container>
 	);
 }
-
-export default App;

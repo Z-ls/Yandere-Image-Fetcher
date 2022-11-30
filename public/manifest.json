@@ -16,8 +16,5 @@
 		"16": "logo512.png",
 		"48": "logo512.png",
 		"128": "logo512.png"
-	},
-	"optional_permissions": [
-		"<all_urls>"
-	  ]
+	}
 }

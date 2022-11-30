@@ -7,8 +7,7 @@ chrome.contextMenus.create(
 	},
 	() => {
 		chrome.contextMenus.onClicked.addListener((info, tab) => {
-			console.log(info.srcUrl);
-			chrome.tabs.create({ url: info.srcUrl });
+			chrome.tabs.create({ url: chrome.runtime.getURL("index.html") });
 		});
 	}
 );
