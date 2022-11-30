@@ -1,0 +1,23 @@
+{
+	"manifest_version": 3,
+	"name": "Savimages",
+	"description": "A little tool to quickly save images on Chrome, because I am lazy.",
+	"version": "1.0",
+	"action": {
+		"default_icon": "logo512.png",
+		"default_popup": "index.html",
+		"default_title": "-Savimages-"
+	},
+	"background": {
+		"service_worker": "contextMenu.js"
+	},
+	"permissions": ["tabs", "activeTab", "downloads", "storage", "contextMenus"],
+	"icons": {
+		"16": "logo512.png",
+		"48": "logo512.png",
+		"128": "logo512.png"
+	},
+	"optional_permissions": [
+		"<all_urls>"
+	  ]
+}
