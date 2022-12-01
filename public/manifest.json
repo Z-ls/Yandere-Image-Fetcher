@@ -11,10 +11,17 @@
 	"background": {
 		"service_worker": "contextMenu.js"
 	},
-	"permissions": ["tabs", "activeTab", "downloads", "storage", "contextMenus"],
+	"permissions": ["tabs", "activeTab", "downloads", "storage", "contextMenus", "scripting"],
+	"host_permissions": ["https://yande.re/"],
 	"icons": {
 		"16": "logo512.png",
 		"48": "logo512.png",
 		"128": "logo512.png"
-	}
+	},
+	"content_scripts": [
+		{
+			"matches": ["https://yande.re/post?tags=*"],
+			"js": ["getRelevantPicIds.js"]
+		}
+	]
 }
