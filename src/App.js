@@ -10,8 +10,8 @@ function App() {
 	const [srcUrl, setSrcUrl] = useState("");
 	const [parentPic, setParentPic] = useState([]);
 	const [childrenPics, setChildrenPics] = useState([]);
-	const [relevantReady] = useState(true);
 	const [showRelevant, setShowRelevant] = useState(false);
+
 	useEffect(() => {
 		chrome.storage.local.get(["url", "srcUrl", "parentPicUrl", "childrenPageUrls"], data => {
 			setUrl(data.url ?? "");
@@ -35,11 +35,11 @@ function App() {
 
 	return (
 		<Container fluid>
-			<Row className="my-2 d-flex justify-content-evenly">
+			<Row className="mt-1 d-flex justify-content-evenly">
 				<Col className="d-flex justify-content-end">
-					<Card style={{ maxWidth: "80rem", maxHeight: "80rem" }}>
+					<Card style={{ maxHeight: "75rem" }}>
 						<Card.Img
-							style={{ maxWidth: "80rem", maxHeight: "80rem", "object-fit": "cover" }}
+							style={{ maxHeight: "50rem", "object-fit": "contain" }}
 							variant="bottom"
 							src={srcUrl}
 						/>
@@ -53,7 +53,6 @@ function App() {
 									<Col className="d-flex justify-content-start">
 										<Button
 											variant="light"
-											disabled={!relevantReady}
 											onClick={() => {
 												setShowRelevant(showRelevant => !showRelevant);
 											}}>
@@ -66,10 +65,10 @@ function App() {
 					</Card>
 				</Col>
 				<Col>
-					<Row id="parent" className="justify-content-start">
+					<Row id="parent" className="d-grid justify-content-start">
 						{showRelevant && <RelevantPicCardGroup pics={parentPic} />}
 					</Row>
-					<Row id="children" className="justify-content-start">
+					<Row id="children" className="mt-3 d-grid justify-content-start">
 						{showRelevant && <RelevantPicCardGroup pics={childrenPics} />}
 					</Row>
 				</Col>
@@ -81,7 +80,7 @@ function App() {
 const fetchParentPic = parentPicUrl => {
 	let parentPic = [];
 	if (parentPicUrl.length === 0) return [];
-	chrome.tabs.create({ url: parentPicUrl[0].src ?? parentPicUrl[0], active: false }, tab => {
+	chrome.tabs.create({ url: parentPicUrl[0], active: false }, tab => {
 		chrome.scripting.executeScript(
 			{
 				target: { tabId: tab.id },
@@ -89,7 +88,7 @@ const fetchParentPic = parentPicUrl => {
 			},
 			() => {
 				chrome.storage.local.get(["parentPic"], data => {
-					parentPic.concat(data.parentPic);
+					parentPic.push(data.parentPic);
 					chrome.storage.local.remove(["parentPic"]);
 					chrome.tabs.remove(tab.id);
 				});
@@ -99,15 +98,15 @@ const fetchParentPic = parentPicUrl => {
 	return parentPic;
 };
 
-const fetchChildrenPics = childrenPics => {
+const fetchChildrenPics = childrenPicUrls => {
 	// setRelevantReady(false);
-	let newChildrenPics = [];
-	if (childrenPics.length === 0) {
+	let childrenPics = [];
+	if (childrenPicUrls.length === 0) {
 		// setRelevantReady(true);
 		return [];
 	}
-	for (let picObj of childrenPics) {
-		chrome.tabs.create({ url: picObj.src ?? picObj, active: false }, tab => {
+	for (let picObj of childrenPicUrls) {
+		chrome.tabs.create({ url: picObj, active: false }, tab => {
 			chrome.scripting.executeScript(
 				{
 					target: { tabId: tab.id },
@@ -115,7 +114,7 @@ const fetchChildrenPics = childrenPics => {
 				},
 				() => {
 					chrome.storage.local.get(["childPic"], data => {
-						newChildrenPics.push(data.childPic);
+						childrenPics.push(data.childPic);
 						chrome.storage.local.remove(["childPic"]);
 						chrome.tabs.remove(tab.id);
 					});
@@ -124,7 +123,7 @@ const fetchChildrenPics = childrenPics => {
 		});
 	}
 	// setRelevantReady(true);
-	return newChildrenPics;
+	return childrenPics;
 };
 
 export default App;

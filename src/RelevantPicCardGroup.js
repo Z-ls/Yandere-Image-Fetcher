@@ -1,11 +1,14 @@
+import { useState } from "react";
 import { Row, Col, CardGroup, Card, Button } from "react-bootstrap";
 import { DownloadButton } from "./DownloadButton";
+import { PreviewModal } from "./PreviewModal";
 
 export function RelevantPicCardGroup(props) {
+	const [showModal, setShowModal] = useState(false);
 	return (
 		<CardGroup>
 			{props.pics.map(pic => {
-				return <CardPicture pic={pic} />;
+				return <CardPicture pic={pic} showModal={showModal} setShowModal={setShowModal} />;
 			})}
 		</CardGroup>
 	);
@@ -13,9 +16,12 @@ export function RelevantPicCardGroup(props) {
 
 function CardPicture(props) {
 	return (
-		<Card className="mx-1" style={{ maxWidth: "40rem", maxHeight: "40rem" }}>
+		<Card className="mx-1" style={{ maxHeight: "25rem" }}>
+			<PreviewModal src={props.pic.src} showModal={props.showModal} setShowModal={props.setShowModal} />
 			<Card.Img
-				style={{ maxHeight: "20rem", "object-fit": "cover" }}
+				rounded
+				thumbnail
+				style={{ maxHeight: "10rem", "object-fit": "cover" }}
 				variant="bottom"
 				bg={props.pic.extension === "png" ? "success" : "light"}
 				src={props.pic.src}
@@ -24,14 +30,19 @@ function CardPicture(props) {
 				<Card.Title>{props.pic.src.split("/")[4]}</Card.Title>
 				<Card.Text>
 					<Row>
-						<text>{props.pic.extension}</text>
+						<Col className="d-flex justify-content-center">
+							<strong>
+								{props.pic.extension + " @ " + props.pic.large_width + " X " + props.pic.large_height}
+							</strong>
+						</Col>
 					</Row>
-					<Row>
-						<text>{props.pic.large_width + " * " + props.pic.large_height}</text>
-					</Row>
-					<Row className="d-flex justify-content-center">
+					<Row className="mt-2 d-flex justify-content-evenly">
 						<Col className="d-flex justify-content-end">
-							<Button variant="success" href={props.pic.src}>
+							<Button
+								variant="success"
+								onClick={() => {
+									props.setShowModal(showModal => !showModal);
+								}}>
 								PREVIEW
 							</Button>
 						</Col>
