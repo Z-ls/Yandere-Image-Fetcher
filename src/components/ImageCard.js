@@ -23,6 +23,15 @@ export function ImageCard(props) {
 				{showButtons && (
 					<Card.Text>
 						<Row className="d-flex justify-content-evenly">
+							{props.pic.pageUrl && (
+								<Row className="mb-1">
+									<Col className="d-flex justify-content-center">
+										<Button variant="info" href={props.pic.pageUrl}>
+											VISIT
+										</Button>
+									</Col>
+								</Row>
+							)}
 							<Row className="mb-1">
 								<Col className="d-flex justify-content-center">
 									<Button

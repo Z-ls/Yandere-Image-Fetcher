@@ -3,9 +3,9 @@ import "./App.css";
 import { useState, useEffect } from "react";
 import { fetchChildrenPics, fetchMainPic, fetchParentPic } from "./js/fetchRelevant";
 import { Stack, Container, Row, Col, Button } from "react-bootstrap";
-import { RelevantPicCardGroup } from "./RelevantPicCardGroup";
-import { MainImageCard } from "./MainImageCard";
-import { HQImageCard } from "./HQImageCard";
+import { RelevantPicCardGroup } from "./components/RelevantPicCardGroup";
+import { MainImageCard } from "./components/MainImageCard";
+import { HQImageCard } from "./components/HQImageCard";
 
 function App() {
 	const [mainPic, setMainPic] = useState();
@@ -47,17 +47,16 @@ function App() {
 			<Row>
 				<Col className="mt-2 d-block justify-content-center">
 					<Row>
-						<Col className="d-flex justify-content-end">
+						<Col className="d-grid justify-content-end">
 							<Stack direction="horizontal" gap={2}>
 								{mainPic && <MainImageCard mainPic={mainPic} />}
 								{highQual && <HQImageCard highQual={highQual} />}
 							</Stack>
 						</Col>
-						<Col className="d-flex justify-content-start">
+						<Col className="d-grid justify-content-start">
 							<Stack direction="vertical" gap={2}>
-								{showRelevant && <RelevantPicCardGroup pics={parentPic} isParent={true} /> && (
-									<RelevantPicCardGroup pics={childrenPics} isParent={false} />
-								)}
+								{showRelevant && <RelevantPicCardGroup pics={parentPic} isParent={true} />}
+								{showRelevant && <RelevantPicCardGroup pics={childrenPics} isParent={false} />}
 							</Stack>
 						</Col>
 					</Row>
