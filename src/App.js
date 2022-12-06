@@ -37,19 +37,16 @@ function App() {
 
 	return (
 		<Container fluid>
-			<Row>
+			<Row className="d-flex justify-content-evenly">
 				<Button
-					variant="light"
+					variant="dark"
 					onClick={() => {
 						setShowRelevant(showRelevant => !showRelevant);
 					}}>
 					SHOW RELEVANT PICTURES
 				</Button>
-			</Row>
-			<Row className="justify-content-center">
 				<Button
 					variant="light"
-					border="primary"
 					onClick={() => {
 						setShowComparison(showComparison => !showComparison);
 					}}>
@@ -70,7 +67,6 @@ function App() {
 									<MainImageCard
 										selected={selected}
 										setSelected={setSelected}
-										toggleSelected={toggleSelected}
 										png={false}
 										pic={mainPic}
 									/>
@@ -79,7 +75,6 @@ function App() {
 									<MainImageCard
 										selected={selected}
 										setSelected={setSelected}
-										toggleSelected={toggleSelected}
 										png={true}
 										pic={highQual}
 									/>
@@ -92,7 +87,6 @@ function App() {
 									<RelevantPicCardGroup
 										selected={selected}
 										setSelected={setSelected}
-										toggleSelected={toggleSelected}
 										pics={parentPic}
 										isParent={true}
 									/>
@@ -101,7 +95,6 @@ function App() {
 									<RelevantPicCardGroup
 										selected={selected}
 										setSelected={setSelected}
-										toggleSelected={toggleSelected}
 										pics={childrenPics}
 										isParent={false}
 									/>
@@ -114,16 +107,5 @@ function App() {
 		</Container>
 	);
 }
-
-const toggleSelected = (selected, setSelected, src) => {
-	let newSelected = selected ?? [];
-	if (!newSelected.includes(src)) {
-		if (newSelected.length === 2) newSelected.shift();
-		newSelected.push(src);
-	} else {
-		newSelected = newSelected.map(s => s !== src);
-	}
-	setSelected(newSelected);
-};
 
 export default App;

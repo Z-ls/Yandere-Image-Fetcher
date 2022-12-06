@@ -1,14 +1,16 @@
 import { Card, Stack } from "react-bootstrap";
 import { DownloadButton } from "./DownloadButton";
+import { toggleSelected } from "../js/commonFunctions";
 
 export function MainImageCard(props) {
 	const src = props.png ? props.pic : props.pic.src;
+
 	return (
 		<Card
-			border={props.selected.includes(src) ? "warning" : ""}
+			className={props.selected.includes(src) && "shadow"}
 			onClick={ev => {
 				ev.preventDefault();
-				props.toggleSelected(props.selected, props.setSelected, src);
+				toggleSelected(props.selected, props.setSelected, src);
 			}}>
 			<Card.Header className="text-muted justify-content-between">
 				<Stack direction="horizontal" gap={2}>
@@ -18,13 +20,7 @@ export function MainImageCard(props) {
 						: props.pic.large_width + " X " + props.pic.large_height}
 				</Stack>
 			</Card.Header>
-			<Card.Img
-				rounded
-				thumbnail
-				variant="Bottom"
-				style={{ maxHeight: "45rem", maxWidth: "45rem", "object-fit": "cover" }}
-				src={src}
-			/>
+			<Card.Img rounded thumbnail variant="Bottom" style={{ maxHeight: "45rem", maxWidth: "45rem" }} src={src} />
 		</Card>
 	);
 }

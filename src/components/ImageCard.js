@@ -2,16 +2,19 @@ import { useState } from "react";
 import { Row, Col, Card, Button } from "react-bootstrap";
 import { ModalPreview } from "./ModalPreview";
 import { DownloadButton } from "./DownloadButton";
+import { toggleSelected } from "../js/commonFunctions";
 
 export function ImageCard(props) {
 	const [showButtons, setShowButtons] = useState(false);
 
 	return (
 		<Card
-			style={{
-				"border-width": props.selected.includes(props.pic.src) ? "1px" : ""
-			}}
+			className={props.selected.includes(props.pic.src) && "shadow"}
 			border={props.isParent ? "danger" : "warning"}
+			onClick={ev => {
+				ev.preventDefault();
+				toggleSelected(props.selected, props.setSelected, props.pic.src);
+			}}
 			onMouseEnter={ev => {
 				ev.preventDefault();
 				setShowButtons(() => true);
@@ -19,10 +22,6 @@ export function ImageCard(props) {
 			onMouseLeave={ev => {
 				ev.preventDefault();
 				setShowButtons(() => false);
-			}}
-			onClick={ev => {
-				ev.preventDefault();
-				props.toggleSelected(props.selected, props.setSelected, props.pic.src);
 			}}>
 			<ModalPreview src={props.pic.src} showModal={props.showModal} setShowModal={props.setShowModal} />
 			<Card.Img thumbnail style={{ maxHeight: "21rem", "object-fit": "cover" }} src={props.pic.src} />

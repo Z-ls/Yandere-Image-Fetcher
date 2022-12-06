@@ -6,12 +6,7 @@ export function ModalPreview(props) {
 			<Modal.Header closeButton />
 			<Modal.Body>
 				<Row className="d-flex justify-content-center">
-					<Image
-						style={{ maxHeight: "80rem", maxWidth: "80rem", "object-fit": "cover" }}
-						rounded
-						thumbnail
-						src={props.src}
-					/>
+					<Image style={{ maxHeight: "54rem", maxWidth: "72rem", "object-fit": "contain"}} rounded src={props.src} />
 				</Row>
 			</Modal.Body>
 		</Modal>

@@ -1,4 +1,4 @@
-import { Modal, Image, Stack, Row } from "react-bootstrap";
+import { Modal, Image, Stack } from "react-bootstrap";
 
 export function ModalComparison(props) {
 	return props.selected.length === 2 ? (
@@ -8,26 +8,24 @@ export function ModalComparison(props) {
 				<Stack direction="horizontal" gap={3}>
 					<Stack gap={2}>
 						<Image
-							style={{ maxHeight: "50rem", maxWidth: "50rem", "object-fit": "cover" }}
-							thumbnail
+							style={{ maxHeight: "27rem", maxWidth: "48rem", "object-fit": "contain" }}
 							rounded
 							src={props.selected[0]}
 						/>
-						<strong>{props.selected[0].split("%20").at(1)}</strong>
+						<strong className="text-center">{props.selected[0].split("%20").at(1)}</strong>
 					</Stack>
 					<Stack gap={2}>
 						<Image
-							style={{ maxHeight: "50rem", maxWidth: "50rem", "object-fit": "cover" }}
-							thumbnail
+							style={{ maxHeight: "27rem", maxWidth: "48rem", "object-fit": "contain" }}
 							rounded
 							src={props.selected[1]}
 						/>
-						<strong>{props.selected[1].split("%20").at(1)}</strong>
+						<strong className="text-center">{props.selected[1].split("%20").at(1)}</strong>
 					</Stack>
 				</Stack>
 			</Modal.Body>
 		</Modal>
 	) : (
-		<strong>Please select (by clicking) two pictures first!</strong>
+		<strong className="text-center">Please select (by clicking) two pictures first!</strong>
 	);
 }

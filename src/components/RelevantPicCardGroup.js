@@ -11,9 +11,9 @@ export function RelevantPicCardGroup(props) {
 			})}
 		</CardGroup>
 	) : (
-		<p className="text-muted">
-			No {props.isParent ? "parent" : "children"} pictures fetched. If you are sure about them, please refresh.
-			And wait for all tabs to close.
+		<p className="text-muted text-center">
+			No {props.isParent ? "parent" : "children"} pictures fetched. If you are sure about them, please refresh,
+			and wait for all tabs to close.
 		</p>
 	);
 }
