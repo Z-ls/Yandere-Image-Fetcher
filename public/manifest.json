@@ -1,12 +1,12 @@
 {
 	"manifest_version": 3,
-	"name": "Savimages",
-	"description": "A little tool to quickly save images on Chrome, because I am lazy.",
+	"name": "Yande.re Page Fetcher",
+	"description": "A little tool to quickly save images on Yande.re, because I am lazy. \nAnd I did not use actual fetches with API calls because I am ignorant.",
 	"version": "1.0",
 	"action": {
 		"default_icon": "logo512.png",
 		"default_popup": "index.html",
-		"default_title": "-Savimages-"
+		"default_title": "-YIF-"
 	},
 	"background": {
 		"service_worker": "contextMenu.js"

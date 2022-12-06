@@ -7,14 +7,13 @@ export function RelevantPicCardGroup(props) {
 	return props.pics.length ? (
 		<CardGroup>
 			{props.pics.map(pic => {
-				return (
-					<ImageCard pic={pic} showModal={showModal} setShowModal={setShowModal} isParent={props.isParent} />
-				);
+				return <ImageCard {...props} pic={pic} showModal={showModal} setShowModal={setShowModal} />;
 			})}
 		</CardGroup>
 	) : (
 		<p className="text-muted">
-			No relevant pictures fetched. If you are sure about them, please refresh. And wait for all tabs to close.
+			No {props.isParent ? "parent" : "children"} pictures fetched. If you are sure about them, please refresh.
+			And wait for all tabs to close.
 		</p>
 	);
 }

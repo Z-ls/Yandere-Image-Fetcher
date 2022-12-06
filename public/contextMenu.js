@@ -2,23 +2,15 @@
 
 chrome.runtime.onInstalled.addListener(() => {
 	chrome.contextMenus.create({
-		id: "savimages-pic",
-		title: "Open a New Tab for this picture",
-		contexts: ["image"]
-	});
-	chrome.contextMenus.create({
-		id: "savimages-page",
-		title: "Analyze this page",
-		contexts: ["page"]
+		id: "YIF-page-fetch",
+		title: "Fetch images from this page",
+		contexts: ["page"],
+		targetUrlPatterns: ["https://yande.re/post*"]
 	});
 });
 
 chrome.contextMenus.onClicked.addListener((info, tab) => {
-	if (info.menuItemId === "savimages-pic") {
-		chrome.storage.local.set({ url: tab.url }, () => {
-			chrome.tabs.create({ url: chrome.runtime.getURL("index.html") });
-		});
-	} else if (info.menuItemId === "savimages-page") {
+	if (info.menuItemId === "YIF-page-fetch") {
 		chrome.storage.local.set({ url: tab.url }, () => {
 			chrome.tabs.create({ url: info.pageUrl, active: false }, tab => {
 				chrome.scripting.executeScript(
