@@ -1,10 +1,10 @@
 {
 	"manifest_version": 3,
 	"name": "Yande.re Page Fetcher",
-	"description": "A little tool to quickly save images on Yande.re, because I am lazy. \nAnd I did not use actual fetches with API calls because I am ignorant.",
+	"description": "Quickly compare images on Yande.re, because I am lazy. Did not use actual fetches with API calls, because I am ignorant.",
 	"version": "1.0",
 	"action": {
-		"default_icon": "logo512.png",
+		"default_icon": "search-2-512.png",
 		"default_popup": "index.html",
 		"default_title": "-YIF-"
 	},
@@ -14,8 +14,8 @@
 	"permissions": ["tabs", "activeTab", "downloads", "storage", "contextMenus", "scripting"],
 	"host_permissions": ["https://yande.re/*", "https://files.yande.re/*"],
 	"icons": {
-		"16": "logo512.png",
-		"48": "logo512.png",
-		"128": "logo512.png"
+		"16": "search-2-512.png",
+		"48": "search-2-512.png",
+		"128": "search-2-512.png"
 	}
 }
