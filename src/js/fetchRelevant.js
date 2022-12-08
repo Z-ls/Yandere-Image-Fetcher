@@ -41,12 +41,12 @@ export function fetchParentPic(parentPicUrl) {
 }
 
 export function fetchChildrenPics(childrenPicUrls) {
-	let childrenPics = [];
+	let childrenPicObjs = [];
 	if (childrenPicUrls.length === 0) {
 		return [];
 	}
-	for (let picObj of childrenPicUrls) {
-		chrome.tabs.create({ url: picObj, active: false }, tab => {
+	childrenPicUrls.forEach(url => {
+		chrome.tabs.create({ url: url, active: false }, tab => {
 			chrome.scripting.executeScript(
 				{
 					target: { tabId: tab.id },
@@ -54,13 +54,13 @@ export function fetchChildrenPics(childrenPicUrls) {
 				},
 				() => {
 					chrome.storage.local.get(["childPic"], data => {
-						childrenPics.push(data.childPic);
+						childrenPicObjs.push(data.childPic);
 						chrome.storage.local.remove(["childPic"]);
 						chrome.tabs.remove(tab.id);
 					});
 				}
 			);
 		});
-	}
-	return childrenPics;
+	});
+	return childrenPicObjs;
 }

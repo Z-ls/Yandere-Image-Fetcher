@@ -11,20 +11,14 @@ chrome.runtime.onInstalled.addListener(() => {
 
 chrome.contextMenus.onClicked.addListener((info, tab) => {
 	if (info.menuItemId === "YIF-page-fetch") {
-		chrome.storage.local.set({ url: tab.url }, () => {
-			chrome.tabs.create({ url: info.pageUrl, active: false }, tab => {
-				chrome.scripting.executeScript(
-					{
-						target: { tabId: tab.id },
-						files: ["fetchRelevantPicUrls.js"]
-					},
-					() => {
-						chrome.tabs.remove(tab.id, () => {
-							chrome.tabs.create({ url: chrome.runtime.getURL("index.html") });
-						});
-					}
-				);
-			});
-		});
+		chrome.scripting.executeScript(
+			{
+				target: { tabId: tab.id },
+				files: ["fetchRelevantPicUrls.js"]
+			},
+			() => {
+				chrome.tabs.create({ url: chrome.runtime.getURL("index.html") });
+			}
+		);
 	}
 });

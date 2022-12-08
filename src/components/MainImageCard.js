@@ -1,4 +1,4 @@
-import { Card, Stack } from "react-bootstrap";
+import { Card, Stack, Badge } from "react-bootstrap";
 import { DownloadButton } from "./DownloadButton";
 import { toggleSelected } from "../js/commonFunctions";
 
@@ -12,15 +12,19 @@ export function MainImageCard(props) {
 				ev.preventDefault();
 				toggleSelected(props.selected, props.setSelected, src);
 			}}>
-			<Card.Header className="text-muted justify-content-between">
+			<Card.Header className="text-muted">
 				<Stack direction="horizontal" gap={2}>
 					<DownloadButton srcUrl={src} />
-					{props.png
-						? "PNG Found for " + props.pic.split("%20").at(1)
-						: props.pic.large_width + " X " + props.pic.large_height}
+					{props.png ? (
+						<Badge pill bg="success">
+							PNG
+						</Badge>
+					) : (
+						props.pic.large_width + " X " + props.pic.large_height
+					)}
 				</Stack>
 			</Card.Header>
-			<Card.Img rounded thumbnail variant="Bottom" style={{ maxHeight: "45rem", maxWidth: "45rem" }} src={src} />
+			<Card.Img rounded thumbnail variant="Bottom" style={{ maxHeight: "43rem", maxWidth: "54rem" }} src={src} />
 		</Card>
 	);
 }

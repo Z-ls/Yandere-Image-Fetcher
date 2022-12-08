@@ -1,5 +1,7 @@
+/*global chrome*/
+
 import { useState } from "react";
-import { Row, Col, Card, Button } from "react-bootstrap";
+import { Row, Col, Card, Button, Badge, Stack } from "react-bootstrap";
 import { ModalPreview } from "./ModalPreview";
 import { DownloadButton } from "./DownloadButton";
 import { toggleSelected } from "../js/commonFunctions";
@@ -29,10 +31,15 @@ export function ImageCard(props) {
 				{showButtons && (
 					<Card.Text>
 						<Row className="d-flex justify-content-evenly">
-							{props.pic.pageUrl && (
+							{props.isParent && (
 								<Row className="mb-1">
 									<Col className="d-flex justify-content-center">
-										<Button variant="info" href={props.pic.pageUrl}>
+										<Button
+											variant="info"
+											onClick={ev => {
+												ev.preventDefault();
+												chrome.tabs.create({ url: props.pic.pageUrl, active: false });
+											}}>
 											VISIT
 										</Button>
 									</Col>
@@ -58,7 +65,12 @@ export function ImageCard(props) {
 					</Card.Text>
 				)}
 			</Card.ImgOverlay>
-			<Card.Footer className="text-muted">{props.pic.large_width + " X " + props.pic.large_height}</Card.Footer>
+			<Card.Footer className="d-flex justify-content-between">
+				<Badge bg="primary" text="light">
+					{props.pic.large_width + " X " + props.pic.large_height}
+				</Badge>
+				{props.pic.src.split(".").at(-1) === "png" && <Badge bg="success">PNG</Badge>}
+			</Card.Footer>
 		</Card>
 	);
 }

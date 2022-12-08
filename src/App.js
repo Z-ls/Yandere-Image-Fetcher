@@ -17,27 +17,16 @@ function App() {
 	const [showComparison, setShowComparison] = useState(false);
 
 	useEffect(() => {
-		chrome.storage.local.get(["url", "parentPicUrl", "childrenPageUrls"], data => {
-			fetchMainPic(data.url, setMainPic, setHighQual);
+		chrome.storage.local.get(["pageUrl", "parentPicUrl", "childrenPageUrls"], data => {
+			fetchMainPic(data.pageUrl, setMainPic, setHighQual);
 			setParentPic(fetchParentPic(data.parentPicUrl));
 			setChildrenPics(fetchChildrenPics(data.childrenPageUrls));
-			chrome.storage.onChanged.addListener((changes, namespace) => {
-				if (namespace === "local") {
-					if (changes.url) fetchMainPic(changes.url.newValue, setMainPic, setHighQual);
-					if (changes.parentPicUrl) {
-						setParentPic(() => fetchParentPic(changes.parentPicUrl.newValue));
-					}
-					if (changes.childrenPageUrls) {
-						setChildrenPics(() => fetchChildrenPics(changes.childrenPageUrls.newValue));
-					}
-				}
-			});
 		});
 	}, []);
 
 	return (
 		<Container fluid>
-			<Row className="d-flex justify-content-evenly">
+			<Row>
 				<Button
 					variant="dark"
 					onClick={() => {
@@ -45,13 +34,15 @@ function App() {
 					}}>
 					SHOW RELEVANT PICTURES
 				</Button>
-				<Button
-					variant="light"
-					onClick={() => {
-						setShowComparison(showComparison => !showComparison);
-					}}>
-					COMPARE SELECTED IMAGES
-				</Button>
+				{selected.length === 2 && (
+					<Button
+						variant="success"
+						onClick={() => {
+							setShowComparison(showComparison => !showComparison);
+						}}>
+						COMPARE SELECTED IMAGES
+					</Button>
+				)}
 			</Row>
 			<Row className="d-flex justify-content-center">
 				{showComparison && (
@@ -62,24 +53,12 @@ function App() {
 				<Col className="mt-2 d-block justify-content-center">
 					<Row>
 						<Col className="d-grid justify-content-end">
-							<CardGroup>
-								{mainPic && (
-									<MainImageCard
-										selected={selected}
-										setSelected={setSelected}
-										png={false}
-										pic={mainPic}
-									/>
-								)}
-								{highQual && (
-									<MainImageCard
-										selected={selected}
-										setSelected={setSelected}
-										png={true}
-										pic={highQual}
-									/>
-								)}
-							</CardGroup>
+							<MainImageCard
+								selected={selected}
+								setSelected={setSelected}
+								png={!!highQual}
+								pic={highQual ?? mainPic}
+							/>
 						</Col>
 						<Col className="d-grid justify-content-start">
 							<Stack direction="vertical" gap={2}>
