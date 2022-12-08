@@ -1,13 +1,14 @@
 /*global chrome*/
 
 import { useState } from "react";
-import { Row, Col, Card, Button, Badge, Stack } from "react-bootstrap";
+import { Row, Col, Card, Button, Badge } from "react-bootstrap";
 import { ModalPreview } from "./ModalPreview";
 import { DownloadButton } from "./DownloadButton";
 import { toggleSelected } from "../js/commonFunctions";
 
 export function ImageCard(props) {
 	const [showButtons, setShowButtons] = useState(false);
+	const [showModal, setShowModal] = useState(false);
 
 	return (
 		<Card
@@ -25,44 +26,43 @@ export function ImageCard(props) {
 				ev.preventDefault();
 				setShowButtons(() => false);
 			}}>
-			<ModalPreview src={props.pic.src} showModal={props.showModal} setShowModal={props.setShowModal} />
+			<ModalPreview src={props.pic.src} showModal={showModal} setShowModal={setShowModal} />
 			<Card.Img thumbnail style={{ maxHeight: "21rem", "object-fit": "cover" }} src={props.pic.src} />
 			<Card.ImgOverlay>
 				{showButtons && (
-					<Card.Text>
-						<Row className="d-flex justify-content-evenly">
-							{props.isParent && (
+					<Row className="d-flex justify-content-evenly">
+						{props.isParent && (
 								<Row className="mb-1">
-									<Col className="d-flex justify-content-center">
-										<Button
-											variant="info"
-											onClick={ev => {
-												ev.preventDefault();
-												chrome.tabs.create({ url: props.pic.pageUrl, active: false });
-											}}>
-											VISIT
-										</Button>
-									</Col>
-								</Row>
-							)}
-							<Row className="mb-1">
 								<Col className="d-flex justify-content-center">
 									<Button
-										variant="success"
-										onClick={() => {
-											props.setShowModal(showModal => !showModal);
+										variant="info"
+										onClick={ev => {
+											ev.preventDefault();
+											chrome.tabs.create({ url: props.pic.pageUrl, active: false });
 										}}>
-										PREVIEW
+										VISIT
 									</Button>
 								</Col>
 							</Row>
-							<Row>
-								<Col className="d-flex justify-content-center">
-									<DownloadButton srcUrl={props.pic.src} />
-								</Col>
-							</Row>
+						)}
+							<Row className="mb-1">
+							<Col className="d-flex justify-content-center">
+								<Button
+									variant="success"
+									onClick={ev => {
+										ev.preventDefault();
+										setShowModal(true);
+									}}>
+									PREVIEW
+								</Button>
+							</Col>
 						</Row>
-					</Card.Text>
+						<Row>
+							<Col className="d-flex justify-content-center">
+								<DownloadButton srcUrl={props.pic.src} />
+							</Col>
+						</Row>
+					</Row>
 				)}
 			</Card.ImgOverlay>
 			<Card.Footer className="d-flex justify-content-between">
