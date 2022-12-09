@@ -24,7 +24,7 @@ export function MainImageCard(props) {
 				thumbnail
 				variant="Bottom"
 				style={{ maxHeight: "45rem", maxWidth: "54rem" }}
-				src={props.pic.src}
+				src={props.pic.sampleSrc}
 			/>
 		</Card>
 	);

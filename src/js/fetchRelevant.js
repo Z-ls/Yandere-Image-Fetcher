@@ -19,11 +19,13 @@ function fetchRelPicsFromPage(type) {
 	const pngLink = document.getElementById("png");
 	const pngHref = pngLink ? pngLink.href : "";
 	const src = !!pngHref ? pngHref : image.src;
-	const hasDeeperRelatives = findDeeperRelatives(pageUrl);
+	const sampleSrc = getSampleSrc(src);
+	const hasDeeperRelatives = findDeeperRelatives();
 	const properties = {
 		pageUrl,
 		src,
 		hasDeeperRelatives,
+		sampleSrc,
 		extension: src.split(".").pop(),
 		large_height: image.getAttribute("large_height"),
 		large_width: image.getAttribute("large_width")
@@ -58,13 +60,13 @@ export const fetchByPageUrl = pageUrl => {
 			},
 			() => {
 				chrome.tabs.remove(tab.id);
-				chrome.tabs.reload(chrome.tabs.getCurrent().id, { bypassCache: true });
+				chrome.tabs.reload(chrome.tabs.getCurrent().id);
 			}
 		);
 	});
 };
 
-function findDeeperRelatives(pageUrl) {
+function findDeeperRelatives() {
 	let result = { hasParent: false, hasChildren: false };
 	const divPostView = document.getElementById("post-view");
 	const divStatusNotice = Array.from(divPostView.getElementsByClassName("status-notice"));
@@ -77,4 +79,10 @@ function findDeeperRelatives(pageUrl) {
 		}
 	}
 	return result;
+}
+
+function getSampleSrc(src) {
+	return src
+		.replace(src.split("/").at(5).split("%20").at(1), src.split("/").at(5).split("%20").at(1).concat("%20sample"))
+		.replace("image", "sample");
 }

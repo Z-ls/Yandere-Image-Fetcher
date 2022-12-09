@@ -26,7 +26,7 @@ export function ImageCard(props) {
 				setShowButtons(() => false);
 			}}>
 			<ModalPreview src={props.pic.src} showModal={showModal} setShowModal={setShowModal} />
-			<Card.Img thumbnail style={{ maxHeight: "21rem", "object-fit": "cover" }} src={props.pic.src} />
+			<Card.Img thumbnail style={{ maxHeight: "21rem", "object-fit": "cover" }} src={props.pic.sampleSrc} />
 			<Card.ImgOverlay>
 				{showButtons && (
 					<Row className="d-flex justify-content-evenly">
@@ -44,7 +44,7 @@ export function ImageCard(props) {
 								</Col>
 							</Row>
 						)}
-						{!props.isParent && props.pic.hasDeeperRelatives && (
+						{!props.isParent && props.pic.hasDeeperRelatives.hasChildren && (
 							<Row className="mb-1">
 								<Col className="d-flex justify-content-center">
 									<Button
@@ -84,7 +84,7 @@ export function ImageCard(props) {
 						bg={
 							props.pic.extension === "png"
 								? "success"
-								: props.pic.hasDeeperRelatives
+								: !props.isParent && props.pic.hasDeeperRelatives.hasChildren
 								? "warning"
 								: "secondary"
 						}>

@@ -8,8 +8,9 @@ import { MainImageCard } from "./components/MainImageCard";
 import { ModalComparison } from "./components/ModalComparison";
 
 function App() {
-	const [mainPic, setMainPic] = useState();
-	const [parentPic, setParentPic] = useState();
+	const [mainPic, setMainPic] = useState({});
+	const [parentPic, setParentPic] = useState({});
+	const [childCount, setChildCount] = useState(0);
 	const [childrenPics, setChildrenPics] = useState([]);
 	const [selected, setSelected] = useState([]);
 	const [showRelevant, setShowRelevant] = useState(false);
@@ -17,6 +18,7 @@ function App() {
 
 	useEffect(() => {
 		chrome.storage.local.get(["pageUrl", "parentPicUrl", "childrenPageUrls"], data => {
+			setChildCount(data.childrenPageUrls.length);
 			fetchRelevantPics("main", data.pageUrl);
 			fetchRelevantPics("parent", data.parentPicUrl);
 			fetchRelevantPics("child", data.childrenPageUrls);
@@ -38,11 +40,12 @@ function App() {
 		<Container fluid>
 			<Row>
 				<Button
-					variant="dark"
+					disabled={childrenPics.length !== childCount}
+					variant={childrenPics.length === childCount ? "light" : "warning"}
 					onClick={() => {
 						setShowRelevant(showRelevant => !showRelevant);
 					}}>
-					SHOW RELEVANT PICTURES
+					SHOW RELEVANT PICTURES : {childrenPics.length} OF {childCount} FETCHED
 				</Button>
 				{selected.length === 2 && (
 					<Button
