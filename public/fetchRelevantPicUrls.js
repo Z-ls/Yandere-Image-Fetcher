@@ -1,6 +1,6 @@
 /* global chrome*/
 {
-	chrome.storage.local.set({ pageUrl: window.location.href, parentPicUrl: [], childrenPageUrls: [] });
+	chrome.storage.local.set({ pageUrl: [window.location.href], parentPicUrl: [], childrenPageUrls: [] });
 	const divPostView = document.getElementById("post-view");
 	const divStatusNotice = Array.from(divPostView.getElementsByClassName("status-notice"));
 	for (let div of divStatusNotice) {

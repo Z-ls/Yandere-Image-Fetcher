@@ -1,10 +1,9 @@
-/*global chrome*/
-
 import { useState } from "react";
-import { Row, Col, Card, Button, Badge } from "react-bootstrap";
+import { Stack, Row, Col, Card, Button, Badge } from "react-bootstrap";
 import { ModalPreview } from "./ModalPreview";
 import { DownloadButton } from "./DownloadButton";
 import { toggleSelected } from "../js/commonFunctions";
+import { fetchByPageUrl } from "../js/fetchRelevant";
 
 export function ImageCard(props) {
 	const [showButtons, setShowButtons] = useState(false);
@@ -32,20 +31,34 @@ export function ImageCard(props) {
 				{showButtons && (
 					<Row className="d-flex justify-content-evenly">
 						{props.isParent && (
-								<Row className="mb-1">
+							<Row className="mb-1">
 								<Col className="d-flex justify-content-center">
 									<Button
 										variant="info"
 										onClick={ev => {
 											ev.preventDefault();
-											chrome.tabs.create({ url: props.pic.pageUrl, active: false });
+											fetchByPageUrl(props.pic.pageUrl);
 										}}>
-										VISIT
+										FETCH
 									</Button>
 								</Col>
 							</Row>
 						)}
+						{!props.isParent && props.pic.hasDeeperRelatives && (
 							<Row className="mb-1">
+								<Col className="d-flex justify-content-center">
+									<Button
+										variant="info"
+										onClick={ev => {
+											ev.preventDefault();
+											fetchByPageUrl(props.pic.pageUrl);
+										}}>
+										FETCH
+									</Button>
+								</Col>
+							</Row>
+						)}
+						<Row className="mb-1">
 							<Col className="d-flex justify-content-center">
 								<Button
 									variant="success"
@@ -65,11 +78,19 @@ export function ImageCard(props) {
 					</Row>
 				)}
 			</Card.ImgOverlay>
-			<Card.Footer className="d-flex justify-content-between">
-				<Badge bg="primary" text="light">
-					{props.pic.large_width + " X " + props.pic.large_height}
-				</Badge>
-				{props.pic.src.split(".").at(-1) === "png" && <Badge bg="success">PNG</Badge>}
+			<Card.Footer className="d-flex justify-content-center">
+				<Stack gap={2}>
+					<Badge
+						bg={
+							props.pic.extension === "png"
+								? "success"
+								: props.pic.hasDeeperRelatives
+								? "warning"
+								: "secondary"
+						}>
+						{props.pic.large_width + " X " + props.pic.large_height}
+					</Badge>
+				</Stack>
 			</Card.Footer>
 		</Card>
 	);

@@ -1,16 +1,15 @@
 /*global chrome*/
 import "./App.css";
 import { useState, useEffect } from "react";
-import { fetchChildrenPics, fetchMainPic, fetchParentPic } from "./js/fetchRelevant";
-import { Stack, Container, Row, Col, Button, CardGroup } from "react-bootstrap";
+import { fetchRelevantPics } from "./js/fetchRelevant";
+import { Stack, Container, Row, Col, Button } from "react-bootstrap";
 import { RelevantPicCardGroup } from "./components/RelevantPicCardGroup";
 import { MainImageCard } from "./components/MainImageCard";
 import { ModalComparison } from "./components/ModalComparison";
 
 function App() {
 	const [mainPic, setMainPic] = useState();
-	const [highQual, setHighQual] = useState("");
-	const [parentPic, setParentPic] = useState([]);
+	const [parentPic, setParentPic] = useState();
 	const [childrenPics, setChildrenPics] = useState([]);
 	const [selected, setSelected] = useState([]);
 	const [showRelevant, setShowRelevant] = useState(false);
@@ -18,9 +17,20 @@ function App() {
 
 	useEffect(() => {
 		chrome.storage.local.get(["pageUrl", "parentPicUrl", "childrenPageUrls"], data => {
-			fetchMainPic(data.pageUrl, setMainPic, setHighQual);
-			setParentPic(fetchParentPic(data.parentPicUrl));
-			setChildrenPics(fetchChildrenPics(data.childrenPageUrls));
+			fetchRelevantPics("main", data.pageUrl);
+			fetchRelevantPics("parent", data.parentPicUrl);
+			fetchRelevantPics("child", data.childrenPageUrls);
+		});
+		chrome.runtime.onMessage.addListener(message => {
+			if (message.mainPic) {
+				setMainPic(message.mainPic);
+			}
+			if (message.parentPic) {
+				setParentPic(message.parentPic);
+			}
+			if (message.childPic) {
+				setChildrenPics(oldList => [...oldList, message.childPic]);
+			}
 		});
 	}, []);
 
@@ -53,12 +63,7 @@ function App() {
 				<Col className="mt-2 d-block justify-content-center">
 					<Row>
 						<Col className="d-grid justify-content-end">
-							<MainImageCard
-								selected={selected}
-								setSelected={setSelected}
-								png={!!highQual}
-								pic={highQual ?? mainPic}
-							/>
+							{mainPic && <MainImageCard selected={selected} setSelected={setSelected} pic={mainPic} />}
 						</Col>
 						<Col className="d-grid justify-content-start">
 							<Stack direction="vertical" gap={2}>

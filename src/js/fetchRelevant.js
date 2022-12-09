@@ -1,66 +1,80 @@
 /*global chrome*/
 
-export function fetchMainPic(mainPicUrl, setMainPic, setHighQual) {
-	if (!mainPicUrl) return undefined;
-	chrome.tabs.create({ url: mainPicUrl, active: false }, tab => {
-		chrome.scripting.executeScript(
-			{
-				target: { tabId: tab.id },
-				files: ["getMainPicObj.js"]
-			},
-			() => {
-				chrome.storage.local.get(["mainPic"], data => {
-					setMainPic(() => data.mainPic);
-					setHighQual(() => data.mainPic.pngUrl);
-					chrome.tabs.remove(tab.id);
-				});
-			}
-		);
-	});
-}
-
-export function fetchParentPic(parentPicUrl) {
-	let parentPic = [];
-	if (parentPicUrl.length === 0) return [];
-	chrome.tabs.create({ url: parentPicUrl[0], active: false }, tab => {
-		chrome.scripting.executeScript(
-			{
-				target: { tabId: tab.id },
-				files: ["getParentPicObj.js"]
-			},
-			() => {
-				chrome.storage.local.get(["parentPic"], data => {
-					parentPic.push(data.parentPic);
-					chrome.storage.local.remove(["parentPic"]);
-					chrome.tabs.remove(tab.id);
-				});
-			}
-		);
-	});
-	return parentPic;
-}
-
-export function fetchChildrenPics(childrenPicUrls) {
-	let childrenPicObjs = [];
-	if (childrenPicUrls.length === 0) {
-		return [];
-	}
-	childrenPicUrls.forEach(url => {
+export function fetchRelevantPics(type, urlList) {
+	urlList.forEach(url => {
 		chrome.tabs.create({ url: url, active: false }, tab => {
 			chrome.scripting.executeScript(
-				{
-					target: { tabId: tab.id },
-					files: ["getChildPicObjs.js"]
-				},
+				{ target: { tabId: tab.id }, func: fetchRelPicsFromPage, args: [type] },
 				() => {
-					chrome.storage.local.get(["childPic"], data => {
-						childrenPicObjs.push(data.childPic);
-						chrome.storage.local.remove(["childPic"]);
-						chrome.tabs.remove(tab.id);
-					});
+					chrome.tabs.remove(tab.id);
 				}
 			);
 		});
 	});
-	return childrenPicObjs;
+}
+
+function fetchRelPicsFromPage(type) {
+	const pageUrl = window.location.href;
+	const image = document.getElementById("image");
+	const pngLink = document.getElementById("png");
+	const pngHref = pngLink ? pngLink.href : "";
+	const src = !!pngHref ? pngHref : image.src;
+	const hasDeeperRelatives = findDeeperRelatives(pageUrl);
+	const properties = {
+		pageUrl,
+		src,
+		hasDeeperRelatives,
+		extension: src.split(".").pop(),
+		large_height: image.getAttribute("large_height"),
+		large_width: image.getAttribute("large_width")
+	};
+	let picObj = {};
+	switch (type) {
+		case "parent": {
+			picObj.parentPic = properties;
+			break;
+		}
+		case "child": {
+			picObj.childPic = properties;
+			break;
+		}
+		case "main": {
+			picObj.mainPic = properties;
+			break;
+		}
+		default: {
+			break;
+		}
+	}
+	chrome.runtime.sendMessage(undefined, picObj);
+}
+
+export const fetchByPageUrl = pageUrl => {
+	chrome.tabs.create({ url: pageUrl, active: false }, tab => {
+		chrome.scripting.executeScript(
+			{
+				target: { tabId: tab.id },
+				files: ["fetchRelevantPicUrls.js"]
+			},
+			() => {
+				chrome.tabs.remove(tab.id);
+				chrome.tabs.reload(chrome.tabs.getCurrent().id, { bypassCache: true });
+			}
+		);
+	});
+};
+
+function findDeeperRelatives(pageUrl) {
+	let result = { hasParent: false, hasChildren: false };
+	const divPostView = document.getElementById("post-view");
+	const divStatusNotice = Array.from(divPostView.getElementsByClassName("status-notice"));
+	for (let div of divStatusNotice) {
+		const a = Array.from(div.getElementsByTagName("a"));
+		if (a[0].text.includes("parent")) {
+			result.hasParent = true;
+		} else if (a[0].text.includes("child")) {
+			result.hasChildren = true;
+		}
+	}
+	return result;
 }
