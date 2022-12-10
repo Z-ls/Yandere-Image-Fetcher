@@ -16,16 +16,31 @@ export function fetchRelevantPics(type, urlList) {
 function fetchRelPicsFromPage(type) {
 	const pageUrl = window.location.href;
 	const image = document.getElementById("image");
+	const highRes = document.getElementById("highres");
+	const highResText = highRes ? highRes.text : "";
+	const jpgFileSize = !!highResText
+		? highResText.split("(").at(-1).replace(")", "").split(" ").at(0) +
+		  " " +
+		  highResText.split("(").at(-1).replace(")", "").split(" ").at(1)
+		: "";
 	const pngLink = document.getElementById("png");
 	const pngHref = pngLink ? pngLink.href : "";
+	const pngText = pngLink ? pngLink.text : "";
+	const pngFileSize = !!pngText
+		? pngText.split("(").at(-1).replace(")", "").split(" ").at(0) +
+		  " " +
+		  pngText.split("(").at(-1).replace(")", "").split(" ").at(1)
+		: "";
 	const src = !!pngHref ? pngHref : image.src;
-	const sampleSrc = getSampleSrc(src);
+	const fileSize = !!pngHref ? pngFileSize : jpgFileSize;
+	const sampleSrc = getSampleSrc(image.src);
 	const hasDeeperRelatives = findDeeperRelatives();
 	const properties = {
 		pageUrl,
 		src,
 		hasDeeperRelatives,
 		sampleSrc,
+		fileSize,
 		extension: src.split(".").pop(),
 		large_height: image.getAttribute("large_height"),
 		large_width: image.getAttribute("large_width")

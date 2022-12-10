@@ -11,7 +11,9 @@ export function ImageCard(props) {
 
 	return (
 		<Card
+			class="card-child"
 			className={props.selected.includes(props.pic.src) && "shadow"}
+			style={{ maxHeight: "50rem" }}
 			border={props.isParent ? "danger" : "warning"}
 			onClick={ev => {
 				ev.preventDefault();
@@ -26,7 +28,7 @@ export function ImageCard(props) {
 				setShowButtons(() => false);
 			}}>
 			<ModalPreview src={props.pic.src} showModal={showModal} setShowModal={setShowModal} />
-			<Card.Img thumbnail style={{ maxHeight: "21rem", "object-fit": "cover" }} src={props.pic.sampleSrc} />
+			<Card.Img style={{ maxHeight: "30rem", "object-fit": "cover" }} src={props.pic.sampleSrc} />
 			<Card.ImgOverlay>
 				{showButtons && (
 					<Row className="d-flex justify-content-evenly">
@@ -89,6 +91,9 @@ export function ImageCard(props) {
 								: "secondary"
 						}>
 						{props.pic.large_width + " X " + props.pic.large_height}
+					</Badge>
+					<Badge bg="dark" text="light">
+						{props.pic.fileSize}
 					</Badge>
 				</Stack>
 			</Card.Footer>

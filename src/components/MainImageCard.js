@@ -17,6 +17,7 @@ export function MainImageCard(props) {
 					<Badge bg="primary" text="light">
 						{props.pic.large_width + " X " + props.pic.large_height}
 					</Badge>
+					<Badge bg="dark" text="light">{props.pic.fileSize}</Badge>
 				</Stack>
 			</Card.Header>
 			<Card.Img
