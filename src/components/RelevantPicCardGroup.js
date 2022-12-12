@@ -1,4 +1,4 @@
-import { Stack } from "react-bootstrap";
+import { Stack, CardGroup } from "react-bootstrap";
 import { ImageCard } from "./ImageCard";
 
 export function RelevantPicCardGroup(props) {
@@ -6,7 +6,7 @@ export function RelevantPicCardGroup(props) {
 		return props.pic ? <ImageCard {...props} pic={props.pic} /> : <NotFoundMessage isParent={props.isParent} />;
 	} else {
 		return props.pics.length ? (
-			<Stack direction="horizontal" gap={1}>
+			<Stack direction="horizontal" gap={0}>
 				{props.pics.map(pic => {
 					return <ImageCard {...props} pic={pic} />;
 				})}

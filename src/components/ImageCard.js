@@ -8,13 +8,10 @@ import { fetchByPageUrl } from "../js/fetchRelevant";
 export function ImageCard(props) {
 	const [showButtons, setShowButtons] = useState(false);
 	const [showModal, setShowModal] = useState(false);
-
 	return (
 		<Card
-			class="card-child"
-			className={props.selected.includes(props.pic.src) && "shadow"}
-			style={{ maxHeight: "50rem" }}
-			border={props.isParent ? "danger" : "warning"}
+			style={{ width: "35rem", "object-fit": "cover" }}
+			className={props.selected.includes(props.pic.src) ? "shadow imageCard" : "imageCard"}
 			onClick={ev => {
 				ev.preventDefault();
 				toggleSelected(props.selected, props.setSelected, props.pic.src);
@@ -27,8 +24,8 @@ export function ImageCard(props) {
 				ev.preventDefault();
 				setShowButtons(() => false);
 			}}>
-			<ModalPreview src={props.pic.src} showModal={showModal} setShowModal={setShowModal} />
-			<Card.Img style={{ maxHeight: "30rem", "object-fit": "cover" }} src={props.pic.sampleSrc} />
+			<ModalPreview pic={props.pic} showModal={showModal} setShowModal={setShowModal} />
+			<Card.Img style={{ height: "35rem", width: "35rem", "object-fit": "cover" }} src={props.pic.sampleSrc} />
 			<Card.ImgOverlay>
 				{showButtons && (
 					<Row className="d-flex justify-content-evenly">

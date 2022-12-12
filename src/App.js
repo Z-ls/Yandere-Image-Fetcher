@@ -3,10 +3,11 @@ import "./App.css";
 import { useState, useEffect } from "react";
 import { fetchRelevantPics } from "./js/fetchRelevant";
 import { handleDrag } from "./js/commonFunctions";
-import { Stack, Container, Row, Col, Button } from "react-bootstrap";
+import { Container, Stack, Row, Col, Button, Navbar } from "react-bootstrap";
 import { RelevantPicCardGroup } from "./components/RelevantPicCardGroup";
 import { MainImageCard } from "./components/MainImageCard";
 import { ModalComparison } from "./components/ModalComparison";
+import { CSSTransition } from "react-transition-group";
 
 function App() {
 	const [mainPic, setMainPic] = useState();
@@ -39,59 +40,61 @@ function App() {
 
 	return (
 		<Container fluid>
-			<Row>
-				<Button
-					disabled={childrenPics.length !== childCount}
-					variant={childrenPics.length === childCount ? "light" : "warning"}
-					onClick={() => {
-						setShowRelevant(showRelevant => !showRelevant);
-					}}>
-					SHOW RELEVANT PICTURES : {childrenPics.length} / {childCount} CHILDREN PICTURES FETCHED
-				</Button>
-				{selected.length === 2 && (
-					<Button
-						variant="success"
-						onClick={() => {
-							setShowComparison(showComparison => !showComparison);
-						}}>
-						COMPARE SELECTED IMAGES
-					</Button>
-				)}
-			</Row>
-			<Row className="d-flex justify-content-center">
-				{showComparison && (
-					<ModalComparison showModal={showComparison} setShowModal={setShowComparison} selected={selected} />
-				)}
-			</Row>
-			<Row>
-				<Col className="mt-2 d-block justify-content-center">
+			<Navbar fluid className="d-block justify-content-center" fixed="top">
+				<Row>
+					<Col className="d-grid justify-content-end">
+						<Button
+							id="show-relevant-button"
+							variant={childrenPics.length === childCount ? "light" : "warning"}
+							onClick={() => {
+								setShowRelevant(showRelevant => !showRelevant);
+							}}>
+							SHOW RELEVANT PICTURES : {childrenPics.length} / {childCount} CHILDREN PICTURES FETCHED
+						</Button>
+					</Col>
+					<Col className="d-grid justify-content-start">
+						{selected.length === 2 && (
+							<Button
+								variant="success"
+								onClick={() => {
+									setShowComparison(showComparison => !showComparison);
+								}}>
+								COMPARE SELECTED IMAGES
+							</Button>
+						)}
+					</Col>
+				</Row>
+			</Navbar>
+			{showComparison && (
+				<ModalComparison showModal={showComparison} setShowModal={setShowComparison} selected={selected} />
+			)}
+			<Row className="mt-5">
+				<Col className="d-block justify-content-center">
 					<Row>
 						<Col className="d-grid justify-content-end">
 							{mainPic && <MainImageCard selected={selected} setSelected={setSelected} pic={mainPic} />}
 						</Col>
-						<Col
-							id="row-children"
-							style={{ overflow: "auto" }}
-							className="d-grid justify-content-start"
-							onMouseDown={handleDrag}>
-							<Stack direction="vertical" gap={2}>
-								{showRelevant && (
+						<Col className="d-grid justify-content-start">
+							<Row className="d-grid">
+								<CSSTransition in={showRelevant} timeout={200} classNames="fade" unmountOnExit>
 									<RelevantPicCardGroup
 										selected={selected}
 										setSelected={setSelected}
 										pic={parentPic}
 										isParent={true}
 									/>
-								)}
-								{showRelevant && (
+								</CSSTransition>
+							</Row>
+							<Row id="row-children" className="d-grid overflow-auto" onMouseDown={handleDrag}>
+								<CSSTransition in={showRelevant} timeout={200} classNames="fade" unmountOnExit>
 									<RelevantPicCardGroup
 										selected={selected}
 										setSelected={setSelected}
 										pics={childrenPics}
 										isParent={false}
 									/>
-								)}
-							</Stack>
+								</CSSTransition>
+							</Row>
 						</Col>
 					</Row>
 				</Col>

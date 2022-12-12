@@ -45,6 +45,7 @@ function fetchRelPicsFromPage(type) {
 		large_height: image.getAttribute("large_height"),
 		large_width: image.getAttribute("large_width")
 	};
+	console.log(properties);
 	let picObj = {};
 	switch (type) {
 		case "parent": {
@@ -83,10 +84,10 @@ export const fetchByPageUrl = pageUrl => {
 
 function findDeeperRelatives() {
 	let result = { hasParent: false, hasChildren: false };
-	const divPostView = document.getElementById("post-view");
-	const divStatusNotice = Array.from(divPostView.getElementsByClassName("status-notice"));
+	const divStatusNotice = Array.from(document.getElementsByClassName("status-notice"));
 	for (let div of divStatusNotice) {
 		const a = Array.from(div.getElementsByTagName("a"));
+		if (!a.length) continue;
 		if (a[0].text.includes("parent")) {
 			result.hasParent = true;
 		} else if (a[0].text.includes("child")) {

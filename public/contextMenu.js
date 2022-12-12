@@ -5,7 +5,7 @@ chrome.runtime.onInstalled.addListener(() => {
 		id: "YIF-page-fetch",
 		title: "Fetch images from this page",
 		contexts: ["page"],
-		targetUrlPatterns: ["https://yande.re/post/*"]
+		targetUrlPatterns: ["https://yande.re/post/show/*"]
 	});
 });
 

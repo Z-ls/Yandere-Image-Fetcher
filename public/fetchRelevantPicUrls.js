@@ -1,10 +1,10 @@
 /* global chrome*/
 {
 	chrome.storage.local.set({ pageUrl: [window.location.href], parentPicUrl: [], childrenPageUrls: [] });
-	const divPostView = document.getElementById("post-view");
-	const divStatusNotice = Array.from(divPostView.getElementsByClassName("status-notice"));
+	const divStatusNotice = Array.from(document.getElementsByClassName("status-notice"));
 	for (let div of divStatusNotice) {
 		const a = Array.from(div.getElementsByTagName("a"));
+		if (!a.length) continue;
 		if (a[0].text.includes("parent")) {
 			chrome.storage.local.set({ parentPicUrl: [a[0].href] });
 		} else if (a[0].text.includes("child")) {
